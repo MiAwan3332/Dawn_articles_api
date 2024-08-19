@@ -1,0 +1,71 @@
+basePath: /api/v1
+definitions:
+  models.Article:
+    properties:
+      story:
+        type: string
+      timestamp:
+        type: string
+      title:
+        type: string
+      url:
+        type: string
+    type: object
+  models.ArticleDetails:
+    properties:
+      excerpt:
+        type: string
+      headline:
+        type: string
+      timestamp:
+        type: string
+      url:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact:
+    name: Abdul Ali Khan
+  description: An API that fetches the latest news articles from Dawn.com
+  license:
+    name: Apache 2.0
+  title: Dawn News Web Scraper API
+  version: "1.0"
+paths:
+  /article/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Return a news article by ID
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Article'
+      summary: Return a news article by ID
+      tags:
+      - news
+  /latest-news/:
+    get:
+      consumes:
+      - application/json
+      description: List all latest news articles published on Dawn.com
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ArticleDetails'
+      summary: Return a list of latest news articles
+      tags:
+      - news
+swagger: "2.0"
