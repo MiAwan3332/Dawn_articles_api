@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 	"time"
-
 	"github.com/abdulalikhan/Dawn-News-API/models"
 	"github.com/gin-gonic/gin"
 	"github.com/gocolly/colly/v2"
@@ -28,22 +27,26 @@ func FetchLatestNews(c *gin.Context) {
 	)
 
 	cly.OnHTML("article", func(e *colly.HTMLElement) {
-		headline := e.ChildText(".story__link  ")
-		link := e.ChildAttr(".story__link  ", "href")
+		headline := e.ChildText(".story__link")
+		link := e.ChildAttr(".story__link", "href")
 		publishTime := e.ChildAttr(".timestamp--time", "title")
 		excerpt := e.ChildText(".story__excerpt")
+		// imageSrc := e.ChildAttr("img", "src")
+		imageDataSrc := e.ChildAttr("img", "data-src")
 		layout := "2006-01-02T15:04:05+05:00"
 		publishTimeParsed, _ := time.Parse(layout, publishTime)
 		if len(publishTime) > 0 {
 			article := models.ArticleDetails{
 				Headline:    headline,
 				URL:         link,
+				ImageUrl:    imageDataSrc,
 				PublishTime: publishTimeParsed.Format("2006-01-02 03:04 PM"),
 				Excerpt:     excerpt,
 			}
 			articles = append(articles, article)
 		}
 	})
+	
 	cly.OnRequest(func(r *colly.Request) {
 		fmt.Println("Visiting", r.URL.String())
 	})
@@ -55,3 +58,4 @@ func FetchLatestNews(c *gin.Context) {
 	//enc.Encode(articles)
 	c.JSON(http.StatusOK, articles)
 }
+
