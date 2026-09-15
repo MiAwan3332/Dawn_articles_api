@@ -1,0 +1,17 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: dawn-articles-api:local
+    container_name: dawn-articles-api
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3004:3003"
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
